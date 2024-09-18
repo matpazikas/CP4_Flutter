@@ -3,41 +3,44 @@ import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/widgets/custom_card_thumbnail.dart';
 
 class NowPlayingList extends StatefulWidget {
-  final List<Movie> movies;
-  const NowPlayingList({super.key, required this.movies});
+  final Result result;
+  const NowPlayingList({super.key, required this.result});
 
   @override
   State<NowPlayingList> createState() => _NowPlayingListState();
 }
 
 class _NowPlayingListState extends State<NowPlayingList> {
-  final PageController _pageController =
-      PageController(initialPage: 0, viewportFraction: 0.9);
-  int currentPage = 0;
+  final PageController _pageController = PageController(viewportFraction: 0.9);
+
+  int currentPage = 1;
   final maxItems = 5;
 
   @override
   Widget build(BuildContext context) {
+    final totalItems = widget.result.movies.length;
+
     return Column(
       children: [
         SizedBox(
-            height: MediaQuery.of(context).size.height * 0.5,
-            child: PageView.builder(
-              controller: _pageController,
-              onPageChanged: (int page) {
-                setState(() {
-                  currentPage = page;
-                });
-              },
-              itemCount: widget.movies.length > maxItems
-                  ? maxItems
-                  : widget.movies.length,
-              itemBuilder: (context, index) {
-                return CustomCardThumbnail(
-                  imageAsset: widget.movies[index].posterPath,
-                );
-              },
-            )),
+          height: MediaQuery.of(context).size.height * 0.5,
+          child: PageView.builder(
+            physics: const ClampingScrollPhysics(),
+            controller: _pageController,
+            itemCount: totalItems > maxItems ? maxItems : totalItems,
+            itemBuilder: (context, index) {
+              final imgUrl = widget.result.movies[index].posterPath;
+              return CustomCardThumbnail(
+                imageAsset: imgUrl,
+              );
+            },
+            onPageChanged: (int page) {
+              setState(() {
+                currentPage = page;
+              });
+            },
+          ),
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: _buildPageIndicators(),
@@ -47,7 +50,7 @@ class _NowPlayingListState extends State<NowPlayingList> {
   }
 
   List<Widget> _buildPageIndicators() {
-    final totalItems = widget.movies.length;
+    final totalItems = widget.result.movies.length;
     final int to = totalItems > maxItems ? maxItems : totalItems;
 
     List<Widget> list = [];

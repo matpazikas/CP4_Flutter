@@ -12,11 +12,11 @@ class TopRatedPage extends StatefulWidget {
 
 class _TopRatedPageState extends State<TopRatedPage> {
   ApiServices apiServices = ApiServices();
-  late Future<Result> topRatedMovies;
+  late Future<Result> topRatedMoviesFuture;
 
   @override
   void initState() {
-    topRatedMovies = apiServices.getTopRatedMovies();
+    topRatedMoviesFuture = apiServices.getTopRatedMovies();
     super.initState();
   }
 
@@ -27,31 +27,22 @@ class _TopRatedPageState extends State<TopRatedPage> {
         title: const Text('Top Rated Movies'),
       ),
       body: FutureBuilder<Result>(
-          future: topRatedMovies,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: ${snapshot.error}'),
-              );
-            }
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data!.movies.length,
-                itemBuilder: (context, index) {
-                  return TopRatedMovie(movie: snapshot.data!.movies[index]);
-                },
-              );
-            }
-
-            return const Center(
-              child: Text('No data found'),
+        future: topRatedMoviesFuture,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.movies.length,
+              itemBuilder: (context, index) {
+                var movie = snapshot.data!.movies[index];
+                return TopRatedMovie(movie: movie);
+              },
             );
-          }),
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
     );
   }
 }

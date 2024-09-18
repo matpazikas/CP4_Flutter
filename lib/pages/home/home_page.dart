@@ -12,16 +12,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final ApiServices apiServices = ApiServices();
+  ApiServices apiServices = ApiServices();
+
   late Future<Result> popular;
   late Future<Result> nowPlaying;
-  late Future<Result> upcoming;
+  late Future<Result> upcomingFuture;
 
   @override
   void initState() {
     popular = apiServices.getPopularMovies();
     nowPlaying = apiServices.getNowPlayingMovies();
-    upcoming = apiServices.getUpcomingMovies();
+    upcomingFuture = apiServices.getUpcomingMovies();
     super.initState();
   }
 
@@ -47,26 +48,15 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              FutureBuilder(
-                  future: nowPlaying,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Error: ${snapshot.error}'),
-                      );
-                    }
-                    if (snapshot.hasData) {
-                      return NowPlayingList(movies: snapshot.data!.movies);
-                    }
-                    return const Center(
-                      child: Text('No data found'),
-                    );
-                  }),
+              FutureBuilder<Result>(
+                future: nowPlaying,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return NowPlayingList(result: snapshot.data!);
+                  }
+                  return const SizedBox();
+                },
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -81,23 +71,15 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              FutureBuilder(
-                  future: popular,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Error: ${snapshot.error}'),
-                      );
-                    }
-                    return MoviesHorizontalList(
-                      movies: snapshot.data!.movies,
-                    );
-                  }),
+              FutureBuilder<Result>(
+                future: popular,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return MoviesHorizontalList(result: snapshot.data!);
+                  }
+                  return const SizedBox();
+                },
+              ),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 child: Text(
@@ -109,23 +91,15 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              FutureBuilder(
-                  future: upcoming,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Error: ${snapshot.error}'),
-                      );
-                    }
-                    return MoviesHorizontalList(
-                      movies: snapshot.data!.movies,
-                    );
-                  }),
+              FutureBuilder<Result>(
+                future: upcomingFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return MoviesHorizontalList(result: snapshot.data!);
+                  }
+                  return const SizedBox();
+                },
+              ),
               const SizedBox(
                 height: 20,
               ),

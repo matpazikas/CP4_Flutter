@@ -3,8 +3,8 @@ import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/pages/home/widgets/movie_horizontal_item.dart';
 
 class MoviesHorizontalList extends StatelessWidget {
-  final List<Movie> movies;
-  const MoviesHorizontalList({super.key, required this.movies});
+  final Result result;
+  const MoviesHorizontalList({super.key, required this.result});
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +13,10 @@ class MoviesHorizontalList extends StatelessWidget {
       height: 230,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: movies.length,
+        itemCount: result.movies.length,
         itemBuilder: (context, index) {
-          return MovieHorizontalItem(movie: movies[index]);
+          final movie = result.movies[index];
+          return MovieHorizontalItem(movie: movie);
         },
       ),
     );
