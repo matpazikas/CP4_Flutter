@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/models/movie_model.dart';
@@ -10,6 +12,16 @@ class SearchPage extends StatefulWidget {
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
+
+const List<String> list = <String>['Select', 'Action', 'Comedy', 'Drama', 'Horror'];
+List<Map<String, dynamic>> lista = [
+  {'id': 00, 'nome': 'Select'},
+  {'id': 28, 'nome': 'Action'},
+  {'id': 35, 'nome': 'Comedy'},
+  {'id': 18, 'nome': 'Drama'},
+  {'id': 27, 'nome': 'Horror'}
+];
+String genero = "Action";
 
 class _SearchPageState extends State<SearchPage> {
   ApiServices apiServices = ApiServices();
@@ -32,7 +44,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void initState() {
-    result = apiServices.getPopularMovies();
+    result = apiServices.getMoviesWithGenre();
     super.initState();
   }
 
@@ -42,6 +54,8 @@ class _SearchPageState extends State<SearchPage> {
     searchController.dispose();
   }
 
+  String dpValue = lista.first['nome'];
+  String? selectedId;
   @override
   Widget build(BuildContext context) {
     final searchTitle = searchController.text.isEmpty
@@ -76,16 +90,48 @@ class _SearchPageState extends State<SearchPage> {
                   },
                 ),
               ),
+              Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: DropdownButton<String>(
+                    value: dpValue,
+                    icon: const Icon(Icons.arrow_downward),
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.white),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.blue,
+                    ),
+                    onChanged: (String? value) {
+                      // This is called when the user selects an item.
+                      setState(() {
+                        dpValue = value!;
+                        for (var item in lista) {
+                          if (item['nome'] == dpValue) {
+                            selectedId =
+                                item['id'].toString(); // Pega o ID como string
+                            break;
+                          }
+                        print('ID selecionado: $selectedId');
+                        }
+                      });
+                    },
+                    items: list.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  )),
               FutureBuilder<Result>(
                 future: result,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     var data = snapshot.data?.movies;
                     return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const SizedBox(
-                            height: 20,
+                            height: 5,
                           ),
                           Text(
                             searchTitle,

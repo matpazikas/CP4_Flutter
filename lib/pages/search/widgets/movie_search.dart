@@ -22,13 +22,13 @@ class MovieSearch extends StatelessWidget {
                 )));
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 7.0),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: 100,
-              height: 140,
+              width: 80,
+              height: 120,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
               ),
@@ -47,7 +47,7 @@ class MovieSearch extends StatelessWidget {
                   Text(
                     movie.title,
                     style: const TextStyle(
-                      fontSize: 17,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -61,6 +61,7 @@ class MovieSearch extends StatelessWidget {
                             .format(movie.releaseDate!),
                     style: const TextStyle(
                       color: Colors.grey,
+                      fontSize: 15
                     ),
                   ),
                   const SizedBox(
