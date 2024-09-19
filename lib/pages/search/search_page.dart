@@ -28,15 +28,15 @@ class _SearchPageState extends State<SearchPage> {
   TextEditingController searchController = TextEditingController();
   late Future<Result> result;
 
-  void search(String query) {
+  void search(int ?id) {
     setState(() {
-      if (query.isEmpty) {
+      if (id == 00) {
         setState(() {
           result = apiServices.getPopularMovies();
         });
-      } else if (query.length > 4) {
+      } else {
         setState(() {
-          result = apiServices.getSearchedMovie(query);
+          result = apiServices.getMoviesWithGenre(id);
         });
       }
     });
@@ -44,7 +44,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void initState() {
-    result = apiServices.getMoviesWithGenre();
+    result = apiServices.getPopularMovies();
     super.initState();
   }
 
@@ -55,7 +55,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   String dpValue = lista.first['nome'];
-  String? selectedId;
+  int ?selectedId;
   @override
   Widget build(BuildContext context) {
     final searchTitle = searchController.text.isEmpty
@@ -69,26 +69,6 @@ class _SearchPageState extends State<SearchPage> {
             children: [
               const SizedBox(
                 height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: CupertinoSearchTextField(
-                  controller: searchController,
-                  padding: const EdgeInsets.all(10.0),
-                  prefixIcon: const Icon(
-                    CupertinoIcons.search,
-                    color: Colors.grey,
-                  ),
-                  suffixIcon: const Icon(
-                    Icons.cancel,
-                    color: Colors.grey,
-                  ),
-                  style: const TextStyle(color: Colors.white),
-                  backgroundColor: Colors.grey.withOpacity(0.3),
-                  onChanged: (value) {
-                    search(searchController.text);
-                  },
-                ),
               ),
               Padding(
                   padding: const EdgeInsets.all(5.0),
@@ -107,12 +87,12 @@ class _SearchPageState extends State<SearchPage> {
                         dpValue = value!;
                         for (var item in lista) {
                           if (item['nome'] == dpValue) {
-                            selectedId =
-                                item['id'].toString(); // Pega o ID como string
+                            selectedId = item['id']; // Pega o ID como string
+                            print('ID selecionado: $selectedId');
                             break;
                           }
-                        print('ID selecionado: $selectedId');
                         }
+                        search(selectedId);
                       });
                     },
                     items: list.map<DropdownMenuItem<String>>((String value) {

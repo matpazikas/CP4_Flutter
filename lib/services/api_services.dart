@@ -55,9 +55,10 @@ class ApiServices {
     throw Exception('failed to load now playing movies');
   }
 
-  Future<Result> getMoviesWithGenre() async {
+  Future<Result> getMoviesWithGenre(int ?id) async {
     const endPoint = 'discover/movie';
-    const url = '$baseUrl$endPoint$key&with_genre=28';
+    String url = '$baseUrl$endPoint$key&with_genres=$id';
+    print(url);
 
     final response = await http.get(Uri.parse(url), headers: {});
     if (response.statusCode == 200) {
