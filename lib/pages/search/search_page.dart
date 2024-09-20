@@ -110,9 +110,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final searchTitle = searchController.text.isEmpty
-        ? 'Top Searches'
-        : 'Search Result for ${searchController.text}';
+  String searchTitle = 'Top Searches';
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -247,7 +245,7 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 5),
               FutureBuilder<Result>(
                 future: result,
                 builder: (context, snapshot) {
@@ -256,16 +254,16 @@ class _SearchPageState extends State<SearchPage> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 5),
+                        const SizedBox(height: 3),
                         Text(
                           searchTitle,
                           style: const TextStyle(
                             color: Colors.white54,
                             fontWeight: FontWeight.w300,
-                            fontSize: 20,
+                            fontSize: 15,
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
