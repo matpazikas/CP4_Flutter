@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:movie_app/common/utils.dart';
 import 'package:movie_app/models/movie_detail_model.dart';
 import 'package:movie_app/models/movie_model.dart';
-import 'package:movie_app/pages/top_rated/widgets/top_rated_movie.dart';
 import 'package:http/http.dart' as http;
 
 const baseUrl = 'https://api.themoviedb.org/3/';
@@ -55,9 +54,9 @@ class ApiServices {
     throw Exception('failed to load now playing movies');
   }
 
-  Future<Result> getMoviesWithGenre(int ?id) async {
+  Future<Result> getMoviesWithGenre(int ?id, idnogenre, language) async {
     const endPoint = 'discover/movie';
-    String url = '$baseUrl$endPoint$key&with_genres=$id';
+    String url = '$baseUrl$endPoint$key&with_genres=$id&without_genres=$idnogenre&language=$language';
     print(url);
 
     final response = await http.get(Uri.parse(url), headers: {});
